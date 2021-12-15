@@ -1001,6 +1001,58 @@ class Solution(object):
                m[i]=i
                
         return False     
-        
+	
+https://leetcode.com/problems/house-robber        
+#include "limits.h"
 
+int maxVal(int i , int j)
+{
+    if(i>j)
+        return i;
+    return j;
+}    
+
+int rob2(int *nums,int i , int max, int *map)
+{
+    if(i > (max-1))
+        return 0;
+     
+    if(INT_MIN != map[i])
+        return map[i]; 
+    
+    if(i == (max-1))
+    {
+        map[i]=nums[i];
+        return map[i];
+    }
+    
+    if(i==(max-2))
+    {
+        map[i]=maxVal(nums[i],rob2(nums,i+1,max,map));
+        return map[i];
+    }    
+    
+    map[i]=maxVal(nums[i]+rob2(nums,i+2,max,map),rob2(nums,i+1,max,map));
+    return map[i];
+}
+int rob(int* nums, int numsSize)
+{
+    int *map= NULL ;
+    int i=0;
+    
+    map=malloc(sizeof(int)*numsSize);
+    if(NULL != map)
+    {
+        memset(map,0,sizeof(int)*numsSize);
+    }    
+    else 
+       return  -1 ;   
+    for (i=0;i<numsSize;i++)
+    {
+        map[i]=INT_MIN;
+    }    
+
+    rob2(nums,0,numsSize,map);
+    return map[0];
+}
 
