@@ -833,4 +833,174 @@ class Solution(object):
         if len(ret2) == 0 :
             ret2=ret
         return ret2      
-            
+
+https://leetcode.com/problems/fibonacci-number
+ int fib2(int * map,int n)
+{
+    if (-1 != map[n])
+        return map[n];
+    
+    if(0 == n)
+    {
+        map[0]=0; 
+        return  map[0];
+    }  
+    if (1 == n)
+    {
+        map[1]=1;
+        return map[1];
+    }    
+    
+    map[n-1]=fib2(map,n-1);
+    map[n-2]=fib2(map,n-2);
+    return map[n-1]+map[n-2];
+}    
+
+
+int fib(int n){
+
+    int * map = NULL ;
+    int i=0;
+    
+    map=malloc(sizeof(int)*40);
+    memset(map,0,sizeof(int)*40);
+    for(i=0;i<40;i++)
+    {
+        map[i]=-1;
+    }    
+    return fib2(map,n);
+}
+
+https://leetcode.com/problems/n-th-tribonacci-number/
+int fib2(int * map,int n)
+{
+    if (-1 != map[n])
+        return map[n];
+    
+    if(0 == n)
+    {
+        map[0]=0; 
+        return  map[0];
+    }  
+    if (1 == n || 2== n)
+    {
+        map[1]=1;
+        return map[1];
+    }    
+    
+    map[n-1]=fib2(map,n-1);
+    map[n-2]=fib2(map,n-2);
+    map[n-3]=fib2(map,n-3);
+    return map[n-1]+map[n-2]+map[n-3];
+}    
+
+
+int tribonacci(int n){
+
+    int * map = NULL ;
+    int i=0;
+    
+    map=malloc(sizeof(int)*40);
+    memset(map,0,sizeof(int)*40);
+    for(i=0;i<40;i++)
+    {
+        map[i]=-1;
+    }    
+    return fib2(map,n);
+}
+
+https://leetcode.com/problems/unique-paths
+int ** alloc_matrix(int m , int n , int val )
+{
+    int **temp = NULL ;
+    int i=0;
+    int j=0;
+    temp =(int **) malloc(sizeof(int *)*m);
+    for(i=0;i<m;i++)
+    {
+        temp[i]=(int *)malloc(sizeof(int)*n);
+        for(j=0;j<n;j++)
+        {
+            temp[i][j]=val;
+        }    
+    }    
+    return temp ;
+}    
+
+void free_matrix(int **mt, int m , int n )
+{
+     int i=0;
+    
+     for(i=0;i<m;i++)
+     {
+         free(mt[i]);
+     }    
+     free(mt);
+}
+
+int uniquePaths(int m, int n){
+    
+    int **in= NULL ;
+    int **out= NULL;
+    int ret=0;
+    int max_rows=m;
+    int max_cols=n;
+    
+    in=alloc_matrix(m,n,0);
+    out=alloc_matrix(m,n,0);
+  
+       int i=0;
+   int j=0;
+   out[max_rows-1][max_cols-1]=1;
+   i=max_rows-1;
+   for(j=max_cols-2;j>=0;j--)
+   {
+      if(in[i][j] == 1 )
+        out[i][j]=0;
+      else
+        out[i][j]=out[i][j+1];
+   }
+   j=max_cols-1;
+   for(i=max_rows-2;i>=0;i--)
+   {
+      if(in[i][j] == 1 )
+        out[i][j]=0;
+      else
+        out[i][j]=out[i+1][j];
+   }
+   for(i=max_rows-2;i>=0;i--)
+   {
+      for(j=max_cols-2;j>=0;j--)
+      {
+         if(in[i][j] == 1)
+           out[i][j]=0;
+         else
+           out[i][j]=out[i][j+1]+out[i+1][j];
+      }
+   }
+
+   ret=out[0][0]; 
+   free_matrix(in,m,n);
+   free_matrix(out,m,n); 
+   return ret;
+}
+
+https://leetcode.com/problems/contains-duplicate
+class Solution(object):
+    def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        m={}
+        for i in nums :
+            try:
+               m[i]
+               return True 
+            except:
+               m[i]=i
+               
+        return False     
+        
+
+
