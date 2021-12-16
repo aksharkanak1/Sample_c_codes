@@ -1182,3 +1182,53 @@ bool hasPathSum(struct TreeNode* root, int targetSum)
     else 
         return false ;
 }
+
+https://leetcode.com/problems/maximum-depth-of-binary-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+
+void  inorder_traversal(struct TreeNode* root , int *path_len , int *max_path_len)
+{
+    int temp =0;
+    if(NULL == root)
+        return 
+     printf("\n%d ",*path_len)   ;
+    temp=*path_len;    
+    *path_len=(temp+1);
+    printf("\n %d %d ",  root->val , *path_len);   
+     if((NULL == (root->left)) && (NULL ==(root->right)))
+     {
+         if(*path_len > *max_path_len)
+         {
+             *max_path_len=*path_len ;
+         }    
+     }
+ 
+   // printf("\n%d ",*path_len)   ;
+     inorder_traversal(root->left,path_len,max_path_len);
+     inorder_traversal(root->right,path_len,max_path_len);
+  
+     temp=*path_len;
+     *path_len=temp-1 ;
+      return  ;
+}    
+
+
+int maxDepth(struct TreeNode* root){
+
+    int path_len=0;
+    int max=0;
+    
+    inorder_traversal(root,&path_len, &max);
+    
+    return  max ;
+    
+}
