@@ -1134,3 +1134,51 @@ int rob(int* nums, int numsSize)
   max2=rob3(nums+1,numsSize-1);
   return (maxVal(max1,max2));  
 }
+
+https://leetcode.com/problems/path-sum
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+void inorder_traversal(struct TreeNode* root , int *sum , int target , int *status  )
+{
+      if(NULL == root || 1 == *status)
+          return ;
+    
+      if((NULL == root->left) && (NULL == root->right ))
+      {
+          *sum=*sum+root->val ;
+          if(*sum == target)
+          {
+              *status=1;
+              return  ; 
+          }    
+      }    
+      else 
+      {
+          *sum=*sum+root->val ;
+      }    
+      inorder_traversal(root->left,sum,target,status);
+      inorder_traversal(root->right,sum,target,status);
+    
+       *sum=*sum-(root->val);
+       return ;
+}   
+
+
+bool hasPathSum(struct TreeNode* root, int targetSum)
+{
+    int status =0;
+    int sum=0;
+      
+    inorder_traversal(root,&sum,targetSum,&status);
+    if(1 == status)
+        return true ;
+    else 
+        return false ;
+}
