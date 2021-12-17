@@ -1283,3 +1283,42 @@ int minDepth(struct TreeNode* root){
     
 }
 
+https://leetcode.com/problems/binary-tree-paths
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def create_str_from_lst(self,lst):
+        str1=""
+        for i in lst :
+             str1=str1+str(i)+"->"
+        str1=str1[:-2]        
+        return  str1
+    
+    def binaryTreePaths2(self, root,out,lst):
+        """
+        :type root: TreeNode
+        :rtype: List[str]
+        """
+        if None == root:
+           return  
+        
+        lst.append(root.val)
+        if None == root.left and None == root.right :
+           str1=self.create_str_from_lst(lst)
+           out.append(str1)
+            
+        self.binaryTreePaths2(root.left,out,lst)
+        self.binaryTreePaths2(root.right,out,lst)
+       
+        del lst[-1]
+        
+    def  binaryTreePaths(self,root):
+         out=[]
+         lst=[]
+         
+         self.binaryTreePaths2(root,out,lst)
+         return out 
