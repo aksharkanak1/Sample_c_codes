@@ -1,3 +1,57 @@
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+struct TreeNode* lowestCommonAncestor2(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q, struct TreeNode **res) {
+    
+    if(NULL == root || NULL != *res)
+        return NULL ;
+    
+    if(root == p )
+    {
+        *res=p;
+        return NULL ;
+    }    
+    
+    if(root == q)
+    {
+        *res=q;
+        return NULL ;
+    }     
+    
+    if((root->val > p->val ) && (root->val > q->val ))
+    {
+        lowestCommonAncestor2(root->left,p,q,res);
+    }    
+    else if ((root->val < p->val ) && (root->val < q->val ))
+    {
+        lowestCommonAncestor2(root->right,p,q,res);
+    }    
+    else if(((root->val > p->val ) && (root->val < q->val ))||((root->val < p->val ) && (root->val > q->val )))
+    {
+        *res=root;
+        return NULL ;
+    }    
+    
+    return  NULL ;
+}
+
+struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {
+    struct TreeNode* temp = NULL ;
+    
+    lowestCommonAncestor2(root,p,q,&temp);
+    
+    return temp; 
+    
+}
+
+
 https://leetcode.com/problems/invert-binary-tree
 struct TreeNode* invertTree(struct TreeNode* root)
 {
