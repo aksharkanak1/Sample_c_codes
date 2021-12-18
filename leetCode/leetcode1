@@ -1,3 +1,19 @@
+https://leetcode.com/problems/invert-binary-tree
+struct TreeNode* invertTree(struct TreeNode* root)
+{
+     struct TreeNode * t = NULL ;
+     if(NULL == root)
+         return NULL ;
+    
+    invertTree(root->left);
+    invertTree(root->right);
+    
+    t=root->left ;
+    root->left=root->right ;
+    root->right=t ;
+    return root ;
+}
+
 Merge trees 
 https://leetcode.com/problems/merge-two-binary-trees/
 struct TreeNode* mergeTrees(struct TreeNode* root1, struct TreeNode* root2)
