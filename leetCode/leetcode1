@@ -1,3 +1,1884 @@
+Merge trees 
+https://leetcode.com/problems/merge-two-binary-trees/
+struct TreeNode* mergeTrees(struct TreeNode* root1, struct TreeNode* root2)
+{
+    struct TreeNode* ret= NULL;    
+    
+    if(NULL == root1 && NULL == root2)
+        return NULL ;
+    
+    ret=( struct TreeNode *)malloc(sizeof(struct TreeNode));
+    memset(ret,0,sizeof(struct TreeNode));
+    if(NULL == ret)
+          return NULL ;
+    ret->val=((NULL != root1)?root1->val:0)+((NULL != root2)?root2->val:0);
+    ret->left=mergeTrees((NULL !=root1)?root1->left:NULL ,(NULL !=root2)?root2->left:NULL);
+    ret->right=mergeTrees((NULL !=root1)?root1->right:NULL ,(NULL !=root2)?root2->right:NULL);
+    return ret; 
+}
+
+
+https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/
+
+void sum1(struct TreeNode* root , unsigned long long * ret , unsigned long long* sum  )
+{
+    if(NULL ==  root)
+        return ;
+    
+    if(1==(root->val))
+    {
+        *ret=((*ret<<1) | 0x01);
+    }    
+    else 
+    {
+         *ret=(*ret<<1);
+    }    
+    if((NULL == (root->left)) && (NULL == (root->right)))
+    {
+        *sum=*sum+*ret;
+    }    
+    sum1(root->left,ret,sum);
+    sum1(root->right,ret,sum);
+    
+    *ret=(*ret>>1);
+}    
+
+int sumRootToLeaf(struct TreeNode* root)
+{
+      unsigned long long ret =0;
+      unsigned long long sum=0;
+        
+      sum1(root,&ret,&sum);
+    
+       return sum;
+
+}
+
+https://leetcode.com/problems/sum-root-to-leaf-numbers/submissions/
+void sum1(struct TreeNode* root , unsigned long long * ret , unsigned long long *sum)
+{
+    if(NULL == root)
+        return ;
+    
+    *ret=(*ret)*10+root->val;
+    
+    if((NULL == (root->left)) && (NULL == (root->right)))
+    {
+        *sum=(*sum)+(*ret);
+    }    
+    sum1(root->left,ret,sum);
+    sum1(root->right,ret,sum);
+    *ret=(*ret/10);
+}  
+
+int sumNumbers(struct TreeNode* root)
+{
+     unsigned long long ret=0;
+     unsigned long long sum=0;
+      sum1(root,&ret,&sum);
+    
+      return sum;
+
+}
+
+https://leetcode.com/problems/validate-binary-search-tree/
+
+#include <limits.h>
+void isValidBST2(struct TreeNode* root,long long  max , long long min,int *invalid)
+{
+    if(1==*invalid || NULL == root )
+        return ;
+    
+    isValidBST2(root->left,((long long)(root->val))-1,min,invalid);
+    #if 0
+    if(!((max>(root->val)) &&((root->val)>min)))
+    {
+        *invalid=1;
+    }
+    #endif 
+    if((root->val) > max || ((root->val)<min))
+    {
+        *invalid=1;
+    }    
+    isValidBST2(root->right,max,((long long )(root->val))+1,invalid);
+        
+}  
+
+bool isValidBST(struct TreeNode* root){
+
+     int invalid=0;
+    
+     if(NULL == root )
+         return false ;
+    
+     if(NULL == root->left && NULL == root->right )
+         return true ;
+    
+    
+     isValidBST2(root,INT_MAX,INT_MIN,&invalid);
+    
+    
+    if(1==invalid)
+        return false;
+    else 
+        return true;
+
+}
+
+https://leetcode.com/problems/balanced-binary-tree/
+int isBalanced2(struct TreeNode* root, int *nob)
+{
+    int lh=0;
+    int rh=0;
+
+    if(NULL == root )
+        return 0;
+
+    lh=isBalanced2(root->left, nob);
+    rh=isBalanced2(root->right, nob);
+    
+    printf("\nrh=%d lh=%d\n",rh,lh);
+    
+    if((rh > lh) && ((rh-lh) >1) )
+       *nob=1;
+    else if ((rh < lh) && ((lh-rh) >1))
+        *nob=1;
+    if((rh > lh))
+        return  (rh+1);
+    else 
+        return (lh+1);
+}
+
+
+bool isBalanced(struct TreeNode* root)
+{
+      int x=0;
+       
+      isBalanced2(root,&x);
+    
+       if(1==x)
+          return false ;
+       else
+          return true ;   
+}
+
+https://leetcode.com/problems/binary-tree-pruning
+
+struct TreeNode* pruneTree(struct TreeNode* root)
+{
+    if(NULL == root)
+        return NULL;
+    
+    root->left=pruneTree(root->left);
+    root->right=pruneTree(root->right);
+    
+    if(NULL == root->left && NULL == root->right)
+    {
+        if(0 == (root->val))
+        {
+            free(root);
+            return NULL ;
+        }    
+    } 
+    
+    return root ;
+
+}
+https://leetcode.com/problems/rotate-array
+void rotate(int* nums, int numsSize, int k){
+   int i =0;
+   //int temp=0;
+    int *data= NULL ;
+    int temp = numsSize;
+    int *temp2= NULL ;
+    
+   if((k==numsSize && numsSize%k == 0) || (0 == numsSize) || (0 ==k))
+       return ;
+    
+    data=malloc(sizeof(int)*numsSize*2);
+    memset(data,0,sizeof(int)*numsSize*2);
+    
+    if(k > numsSize)
+        k=k%numsSize ;
+    
+    memcpy(data,nums,sizeof(int)*numsSize);
+    memcpy(((char*)data)+(sizeof(int)*numsSize),nums,sizeof(int)*numsSize);
+    temp2=&data[numsSize];
+    temp2=temp2-k;
+    memcpy(nums,temp2,sizeof(int)*numsSize);
+    
+}
+
+https://leetcode.com/problems/cousins-in-binary-tree
+void aresiblings(struct TreeNode* root , int x, int y, int*areSib)
+{
+    if(NULL == root || 1 == *areSib)
+        return ;
+    
+    if((NULL !=(root->left)) && (NULL != (root->right)))
+    {
+        if(((x==(root->left->val)) && (y == (root->right->val)))||
+            ((y==(root->left->val)) && (x == (root->right->val))))
+            {
+                *areSib=1;
+                return; 
+            }    
+    }   
+    if(NULL != (root->left)) 
+       aresiblings(root->left,x,y,areSib);  
+    if (NULL != (root->right))
+       aresiblings(root->right,x,y,areSib);    
+              
+}    
+
+void getLevel(struct TreeNode* root , int x, int *xlevel, int level)
+{
+    if(NULL ==  root)
+        return;
+    
+    if(*xlevel >=0)
+        return;
+    if(x == root->val)
+    {
+        *xlevel=level;
+        return  ;
+    }    
+    getLevel(root->left,x,xlevel,level+1);
+    getLevel(root->right,x,xlevel,level+1);
+    
+}            
+            
+            
+
+bool isCousins(struct TreeNode* root, int x, int y)
+{
+    int areSib=0;
+    int levelx=-1;
+    int levely=-1;
+    aresiblings(root,x,y,&areSib);
+    
+    if(1 == areSib)
+        return  false ;
+    
+    getLevel(root,x,&levelx,0);
+    getLevel(root,y,&levely,0);
+    
+    if((-1 != levelx) &&(-1 !=levely) && (levelx == levely))
+    {
+        return true;
+    }    
+    else 
+        return  false;
+    
+
+}
+
+https://leetcode.com/problems/add-binary
+#define MAX_SIZE 10025
+
+void revStr(char * str, int i , int j)
+{
+    char temp =0;
+    while(i<=j)
+    {
+        temp=str[i];
+        str[i]=str[j];
+        str[j]=temp;
+        i++;
+        j--;
+    }    
+}    
+
+char * addBinary(char * a, char * b)
+{
+     char *ret = NULL ;
+     int la=0;
+     int lb=0;
+     int c=0; 
+     int retIdx=0; 
+     int sum =0;
+     int i=0,j=0;
+    
+      ret=(char *) malloc(sizeof(char) *MAX_SIZE);
+     
+      if(NULL == ret)
+          return ret ;
+    
+      memset(ret,0,sizeof(char) *MAX_SIZE);
+    
+      la=strlen(a);
+      lb=strlen(b);
+      i=la-1;
+      j=lb-1;
+      while((i>=0) || (j>=0))
+      {   
+          sum=0;
+          if(i>=0)
+          {
+              sum+=(a[i]-'0')+c;
+              c=0;
+          }    
+          if(j>=0)
+          {
+              sum+=(b[j]-'0')+c;
+              c=0;
+          }    
+          c=sum/2;
+          sum=sum%2;
+          printf("\n%d\n",sum);
+          ret[retIdx]='0'+sum;
+          retIdx++;
+          i--;
+          j--;
+      }
+      if(1 ==c )
+      {
+          ret[retIdx]='0'+1;
+      }    
+      else 
+          retIdx--;
+      
+      printf("\n%s\n",ret);
+      revStr(ret,0,retIdx);
+    
+      return ret;
+}
+
+
+https://leetcode.com/problems/linked-list-in-binary-tree
+/*
+Create recursive function, given a pointer in a Linked List and any node in the Binary Tree. Check if all the elements in the linked list starting from the head correspond to some downward path in the binary tree.
+*/
+void check_for_list(struct ListNode* node , struct TreeNode* root, int *got_list)
+{
+    if(1 == *got_list || NULL == node || NULL == root)
+        return ;
+    
+    if((NULL == node->next) && ( node->val == root->val))
+    {
+        *got_list=1;
+    }    
+    
+    if(node->val  == root->val)
+    {
+        check_for_list(node->next,root->left,got_list);
+        check_for_list(node->next,root->right,got_list);
+    }    
+    else 
+        return  ;
+}
+
+void traverse(struct ListNode* head, struct TreeNode* root , int *got_list)
+{
+    if(NULL == head || NULL == root || 1 == *got_list)
+     return ;
+    
+    if(head->val == root->val)
+      check_for_list(head,root,got_list);
+    
+    traverse(head,root->left,got_list);
+    traverse(head,root->right,got_list);
+}
+
+
+bool isSubPath(struct ListNode* head, struct TreeNode* root)
+{
+     int got_list=0;
+    
+      traverse(head,root,&got_list);
+    
+       if(1 == got_list)
+           return true ;
+        else 
+           return false ; 
+
+}
+
+https://leetcode.com/problems/design-linked-list
+typedef struct node_s
+{
+    int val ;
+    struct node_s *next ;
+}node_t;
+
+
+typedef struct {
+    int c;
+    node_t *head;
+    node_t *tail ;
+} MyLinkedList;
+
+/** Initialize your data structure here. */
+
+MyLinkedList* myLinkedListCreate() {
+    
+   MyLinkedList* temp = NULL ;
+    
+    temp=malloc(sizeof(MyLinkedList));
+    if(NULL == temp)
+       return NULL ;
+    
+    memset(temp,0,sizeof(MyLinkedList));
+    return  temp;
+    
+}
+
+/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+int myLinkedListGet(MyLinkedList* obj, int index) {
+    node_t * t=0;
+    int i =0;
+    
+    if(NULL == obj)
+        return -1;
+    
+    if(index >=obj->c)
+        return -1;
+    
+    t=obj->head;
+    
+    for(i=0;i<(obj->c);i++)
+    {
+        if(i == index)
+           return t->val; 
+        
+        t=t->next ;
+    }    
+    
+    return -1;
+  
+}
+
+/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+void myLinkedListAddAtHead(MyLinkedList* obj, int val)
+{
+    node_t* t=0;
+    
+    if(NULL == obj)
+        return ;
+    
+    t=malloc(sizeof(node_t));
+    if(NULL == t)
+        return  ;
+    memset(t,0,sizeof(node_t));
+    t->val=val;
+    
+    if(0 == obj->c)
+    {
+        obj->head=obj->tail=t;
+        obj->c=1;
+    }    
+    else 
+    {
+        t->next=obj->head;
+        obj->head=t;
+        (obj->c)++;
+    }    
+  
+}
+
+/** Append a node of value val to the last element of the linked list. */
+void myLinkedListAddAtTail(MyLinkedList* obj, int val) {
+        node_t * t=0;
+    
+    if(NULL == obj)
+        return ;
+    
+    t=malloc(sizeof(node_t));
+    if(NULL == t)
+        return  ;
+    memset(t,0,sizeof(node_t));
+    t->val=val;
+    
+    if(0 == obj->c)
+    {
+        obj->head=obj->tail=t;
+        obj->c=1;
+    }    
+    else 
+    {
+        obj->tail->next=t;
+        obj->tail=t;
+        (obj->c)++;
+    }   
+  
+}
+
+/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+void myLinkedListAddAtIndex(MyLinkedList* obj, int index, int val) {
+    
+    node_t * t =NULL ;
+     node_t * t1 =NULL ;
+    int jumps=index-1;
+    node_t * temp = NULL ;
+    int i=0;
+    
+    if(NULL ==  obj)
+        return ;
+    
+    if (index > (obj->c))
+        return ;
+    
+    t=malloc(sizeof(node_t));
+    if(NULL == t)
+        return  ;
+    memset(t,0,sizeof(node_t));
+    t->val=val;
+    
+    if(0 == index)
+    {
+        t->next=obj->head;
+        obj->head=t;
+        if(obj->tail == NULL )
+            obj->tail=obj->head;
+        (obj->c)++;
+    }
+    else if (index == (obj->c))
+    {
+        obj->tail->next = t;
+        obj->tail=t;
+        (obj->c)++;
+    }    
+    else 
+    {   temp=obj->head;
+        for(i=0;i<jumps;i++)
+        {
+             temp=temp->next ;
+        }    
+        t->next=temp->next ;
+        temp->next=t;
+        (obj->c)++;    
+    }    
+    
+  
+}
+
+/** Delete the index-th node in the linked list, if the index is valid. */
+void myLinkedListDeleteAtIndex(MyLinkedList* obj, int index) 
+{
+    node_t * t = NULL;
+    node_t *t1=NULL  ; 
+    int jumps=0 , i=0;
+    if(NULL == obj )
+        return ;
+    
+    if((0 == obj->c) || (index >((obj->c)-1)))
+        return;
+    
+    if( 0 == index)
+    {
+        t=obj->head;
+        obj->head=t->next ;
+        free(t);
+        (obj->c)--;
+    }    
+    else 
+    {
+        t=obj->head;
+        jumps =index-1;
+        for(i=0;i<jumps;i++)
+        {
+            t=t->next;
+        }    
+        t1=t->next ;
+        t->next=t1->next ;
+        printf("\n------->t1 = %d\n", t1->val);
+        if((obj->tail) == t1)
+        {
+            if(NULL != t1->next)
+                obj->tail = t1->next ;
+            else 
+                obj->tail = t;
+                
+        }
+        free(t1);
+        (obj->c)--;
+            
+    }    
+  
+}
+
+void myLinkedListFree(MyLinkedList* obj) {
+    
+    node_t * t1= NULL ;
+    node_t *t2= NULL ;
+    if(NULL == obj)
+        return ;
+    int i=0;
+    
+    if(0 == obj->c)
+        return  ;
+    
+    t1=obj->head;
+    t2=t1->next;
+    while(NULL != t1)
+    {
+        free(t1);
+        t1=t2;
+        if(NULL !=t2)
+          t2=t2->next;
+    }    
+    
+    free(obj);
+    
+}
+
+https://leetcode.com/problems/valid-parentheses
+bool isValid(char * s)
+{
+      int len  = 0;
+     char * st=NULL ;
+     int i=0;
+     int stidx=0;
+     len=strlen(s);
+     int insert=0;
+    
+     if(1==len)
+         return  false ;
+    
+     st=(char *) malloc(len);
+     if(NULL == st)
+        return false ;
+     memset(st,0,len);
+
+     st[stidx]=s[0];
+    
+     for (i=1;i<len;i++)
+     {
+         insert =1;
+        if( -1 < stidx)
+        {    
+            if((s[i] == ')' && st[stidx] == '(') || (s[i] =='}' && st[stidx] == '{') || (s[i] == ']' && st[stidx] == '['))
+            {
+                 st[stidx]='\0';
+                 stidx--;
+                  insert=0;
+            } 
+         }
+         if(1 == insert)
+         {
+             if(-1==stidx)
+             {
+                 stidx=0;
+                 st[stidx]=s[i];
+             }
+             else
+             {
+                 stidx++;
+                 st[stidx]=s[i];
+             }
+            //printf("\n%s\n",st);
+         }
+     }
+
+     free(st);
+     if(-1==stidx)
+         return  true ;
+      else
+         return false;
+
+     
+
+}
+
+https://leetcode.com/problems/climbing-stairs
+//check the results for n=1,2,3,4, 5 we can see that its a fibonacci series 
+int climbStairs(int n)
+{
+    int * t = NULL ;
+    int i=0;
+    
+    t= malloc(sizeof(int) *(n+1));
+    
+    if(NULL == t)
+        return 0 ;
+    
+    memset(t,0,sizeof(int) *(n+1));
+    t[0]=1;
+    t[1]=1;
+    for(i=2;i<=n;i++)
+    {
+        t[i]=t[i-1]+t[i-2];
+    }    
+    
+    return t[n];
+    
+}
+
+https://leetcode.com/problems/partition-list
+struct ListNode* partition(struct ListNode* head, int x)
+{
+    struct ListNode* ret= NULL ;
+    struct ListNode* t= NULL ;
+    struct ListNode* newL = NULL ;
+    struct ListNode* newLp= NULL ;
+    struct ListNode* newH= NULL ;
+    struct ListNode* newHp= NULL ;
+    
+    if(NULL == head|| NULL == head->next)
+        return  head ;
+    
+    t=head;
+    while(NULL != t)
+    {
+        if(x > t->val)
+        {
+            
+            if(NULL == newL )
+            {
+                newL=t;
+                newLp=newL;
+            }    
+            else 
+            {
+                newLp->next=t;
+                newLp=t;
+            }    
+            t=t->next;
+            newLp->next= NULL ;
+        }    
+        else 
+        {
+          
+            if(NULL == newH )
+            {
+                newH=t;
+                newHp=newH;
+            }    
+            else 
+            {
+                newHp->next=t;
+                newHp=t;
+            }    
+            t=t->next;
+            newHp->next= NULL ;          
+        }    
+    }
+    
+    if(NULL !=newLp)
+    {    
+       newLp->next=newH;
+       return newL;
+    }
+    else 
+    {
+        return  newH;
+    }    
+ 
+
+}
+
+https://leetcode.com/problems/sort-an-array
+void merge(int *nums , int i , int m , int j)
+{
+    int p=m+1;
+    int temp =0;
+
+    while (i<=m && p <= j)
+    {
+        if(nums[i] >nums[p])
+        {
+            temp=nums[p];
+            memmove((char *)(&nums[i+1]),(char *)(&nums[i]),sizeof(int)*(m-i+1));
+            nums[i]=temp;
+            p=p+1;
+            m=m+1;
+            i=i+1;
+        }
+        else
+        {
+            i=i+1 ;
+        }
+    }
+}
+
+void merge_without_memmove(int *nums , int i , int m , int j )
+{
+    int * tempA= NULL ;
+    int p=m+1;
+    int idx=0;
+    int tempi=i;
+    int tempj=j;
+
+
+    tempA=(int *)malloc(sizeof(int) * (j-i+1));
+    memset(tempA,0,sizeof(int) * (j-i+1));
+
+    while (i<=m && p<=j)
+    {
+        if(nums[i] > nums[p])
+        {
+           tempA[idx]=nums[p];
+           p++;
+           idx++;
+        }
+        else
+        {
+           tempA[idx]=nums[i];
+           i++;
+           idx++;
+        }
+    }
+
+    if(i <= m )
+    {
+      memcpy(&tempA[idx],&nums[i],sizeof(int) * (m-i+1));
+    }
+    else
+    {
+      memcpy(&tempA[idx],&nums[p],sizeof(int) * (j-p+1));
+    }
+
+    memcpy(&nums[tempi],tempA,sizeof(int)*(tempj-tempi+1));
+    free(tempA);
+}
+
+
+void mergeSort(int *nums , int i , int m , int j)
+{
+    if(i == j)
+        return  ;
+    mergeSort(nums,i,(m+i)/2,m);
+    mergeSort(nums,m+1,((m+1+j)/2),j);
+    merge_without_memmove(nums,i,m,j);
+}
+
+void printarray(int *a , int len )
+{
+     int i=0;
+
+     for (i=0;i<len;i++)
+     {
+          if (i==0 || i %16 ==0)
+              printf("\n");
+          printf(" %d", a[i]);
+     }
+}
+
+
+int* sortArray(int* nums, int numsSize, int* returnSize)
+{
+     mergeSort(nums,0,(numsSize-1)/2,numsSize-1);
+     *returnSize=numsSize;
+     printarray(nums,numsSize)    ;
+     return nums;
+}
+
+https://leetcode.com/problems/binary-search
+int search(int* nums, int numsSize, int target)
+{
+       int i=0;
+       int j =0;
+       int m =0;
+       int ret=-1;
+    
+       i =0;
+       j=numsSize-1;
+       
+       m=(i+j)/2 ;
+    
+       while (i <= j)
+       {
+           if(target < nums[m])
+           {
+               j=m-1;
+               m=(i+j)/2;
+           }    
+           if(target > nums[m])
+           {
+               i=m+1;
+               m=(i+j)/2;
+           }    
+           if( target == nums[m])
+           {
+               ret=m;
+               break ;
+           }    
+       }
+      return ret ;
+}
+https://leetcode.com/problems/first-bad-version
+int firstBadVersion(int n) {
+    
+    unsigned long long  i=1; 
+    unsigned long long  j=n;
+    unsigned long long m=(i+n)/2;
+    bool ret=0;
+    int l_ver=0;
+    
+    while(i <= j)
+    {
+        printf("\n%d\n", m);
+        ret=isBadVersion(m);
+        if(true == ret )
+        {
+            l_ver = m ;
+            j=m-1;
+            m=(i+j)/2;
+        }    
+        else
+        {
+            i=m+1;
+            m=(i+j)/2;
+        }     
+    }  
+    
+    return  l_ver;
+    
+}
+
+https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array
+int* searchRange(int* nums, int numsSize, int target, int* returnSize)
+{
+    
+    int* pret= NULL ;
+    int i=0;
+    int j=0;
+    int m=0;
+    int found =0;
+    int temp=0;
+    
+    
+    
+    pret=malloc(sizeof(int)*2);
+    if(NULL == pret)
+        return NULL ;
+    
+    memset(pret,0,sizeof(int)*2);
+    pret[0]=-1;
+    pret[1]=-1;
+    *returnSize=2 ;
+    
+    if(0 == numsSize)
+        return pret;
+    j=numsSize-1;
+    m=(i+j)/2;
+    while(i<=j)
+    {
+       if(target <nums[m])
+       {
+           j=m-1;
+           m=(i+j)/2;
+       }    
+        else if(target > nums[m])
+        {
+            i=m+1;
+            m=(i+j)/2;
+        }    
+        else if (target == nums[m]) 
+        {
+            found =1;
+            break ;
+        }    
+    }
+    printf("\n%$d\n", found);
+    if(1 == found )
+    {
+        temp=m;
+        while((temp >= 0) && (nums[temp] == target))
+        {
+            temp--;
+        }    
+        pret[0]=temp+1;
+        temp=m;
+        while((temp <= (numsSize-1)) && (nums[temp] == target))
+        {
+            temp++;
+        } 
+        pret[1]=temp-1; 
+    }    
+    
+
+    return pret;
+}
+
+https://leetcode.com/problems/find-minimum-in-rotated-sorted-array
+
+
+int findMin(int* nums, int numsSize)
+{
+    
+    int i =0;
+    int temp =0;
+    
+    int j=numsSize-1;
+    int m =(i+j)/2;
+    
+    if(1 == numsSize)
+        return nums[0];
+    
+    if((nums[i] < nums[m]) && (nums[j] > nums[m]))
+       return nums[i];
+    
+    while(i <= j)
+    {
+        if(j == (i+1))
+        {
+           if (nums[i] < nums[j])
+               return nums[i];
+           else 
+               return nums[j];
+        }        
+        if(nums[m] < nums [i])
+        {
+            j=m;
+            m=(i+j)/2;
+        } 
+        else if (nums[m] > nums [j])
+        {
+            i=m ;
+            m=(i+j)/2;
+        }     
+    }    
+    
+    return 0;
+}
+https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii
+int map[200]={0,} ;
+        
+void update_map(struct ListNode* head)
+{
+    struct ListNode* t =  head ;
+    memset(map,0,sizeof(int)*200);
+    
+    if(NULL == t )
+        return ;
+    
+    while(NULL != t)
+    {
+        if(-100 <= (t->val) && 100>=(t->val))
+        {    
+            map[(t->val)+100]++;
+            printf("\nval %d map %d\n",t->val,map[(t->val)+100]);
+        }
+        t=t->next ;
+    }    
+}        
+
+
+struct ListNode* deleteDuplicates(struct ListNode* head)
+{
+      struct ListNode* p = NULL ;
+      struct ListNode* q= NULL;
+      struct ListNode* r= NULL ;
+      struct ListNode*t= NULL ; 
+ 
+      update_map(head); 
+    
+      t=head;
+      while(NULL != t && map[(t->val)+100] != 1)
+      {
+          if(map[(t->val)+100] > 1)
+          {
+              printf("\nfreeing %d  map value %d  is ",t->val,map[(t->val)+100]); 
+              r=t->next;
+              free(t);
+              t=r;
+          }    
+      }    
+    
+      head=t;
+    
+      if(NULL == head || NULL ==  head->next)
+          return  head ;
+      
+       p=head;
+       q=head->next ;
+       while(NULL != q)
+       {
+           if(map[(q->val)+100] >1)
+           {
+               r=q->next;
+               free(q);
+               p->next=r;
+               q=p->next;
+           }    
+           else
+           {
+               p=q;
+               q=q->next;
+           }    
+           
+       }
+    
+       return head ;
+}
+
+https://leetcode.com/problems/missing-number
+int missingNumber(int* nums, int numsSize){
+    
+    int actual_sum=0;
+    int actual_sum_2=0;
+    
+    int i=0;
+    
+    for (i=0;i<(numsSize+1);i++)
+    {
+        actual_sum+=i;
+    }    
+
+    for (i=0;i<(numsSize);i++)
+    {
+        actual_sum_2+=nums[i];
+    }      
+    
+    return (actual_sum-actual_sum_2);
+    
+}
+
+https://leetcode.com/problems/merge-sorted-array
+void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n)
+{
+   int i =  0;
+   int j = 0;
+   int ri=0;  
+   int *ret= NULL ; 
+
+    if(0==m)
+    {
+        memcpy(nums1,nums2,sizeof(int)*n);
+        return ;
+    }    
+    
+    ret=malloc((m+n)*sizeof(int));
+    if(NULL == ret )
+    {
+        return ;  
+    }    
+    memset(ret,0,(m+n)*sizeof(int));
+    
+    while(i<m && j<n)
+    {
+        if(nums1[i] < nums2[j])
+        {
+            ret[ri]=nums1[i];
+            i++;
+            ri++;
+        }
+        else 
+        {
+            ret[ri]=nums2[j];
+            j++;
+            ri++;
+        }    
+    }    
+    
+    if(i<m)
+    {
+        while(i<m)
+        {
+            ret[ri]=nums1[i];
+            ri++;
+            i++;
+        }    
+    }
+    else 
+    {
+        while(j<n)
+        {
+            ret[ri]=nums2[j];
+            ri++;
+            j++;
+        }          
+    }    
+        
+    memcpy(nums1, ret,(m+n)*sizeof(int));
+    free(ret);
+    return ;
+
+}
+
+https://leetcode.com/problems/squares-of-a-sorted-array
+https://www.youtube.com/watch?v=4eWKHLSRHPY
+int* sortedSquares(int* nums, int numsSize, int* returnSize){
+    
+    int * ret = NULL ;
+    int s=0;
+    int e=numsSize-1;
+    int c=numsSize-1;
+    int se=0;
+    int ss=0;
+    
+    ret=(int *) malloc(sizeof(int) * numsSize);
+    if(NULL == ret)
+    {
+        return NULL;
+    }    
+    memset(ret,0,sizeof(int) * numsSize);
+    *returnSize=numsSize;
+    
+    while (s<=e)
+    {
+        ss=nums[s]*nums[s];
+        se=nums[e]*nums[e];
+        
+        if(ss > se )
+        {
+            ret[c]=ss;
+            c--;
+            s++;
+        }
+        else 
+        {
+           ret[c]=se;
+           c--; 
+           e--; 
+        }    
+    }    
+    
+    return ret ;
+}
+
+https://leetcode.com/problems/contains-duplicate
+#define HAX_TABLE_SiZE  1000
+
+typedef struct node_s
+{
+    int d ;
+    struct node_s *n ; 
+}node_t;
+
+typedef struct hTable_s
+{
+    struct node_s **node ;
+    int c ;
+}hTable_t;
+
+int hash_value(int d)
+{
+    int ret = d%HAX_TABLE_SiZE ;
+    
+    if(ret < 0)
+       ret= -1 * ret; 
+    return (ret);
+}
+
+int hash_table_init(hTable_t *ht)
+{
+    ht->node=(struct node_s **)malloc(sizeof(struct node_s *)*HAX_TABLE_SiZE);
+    if(NULL ==  ht->node)
+    {
+        return -1 ;
+    }    
+    memset(ht->node,0,sizeof(struct node_s *)*HAX_TABLE_SiZE);
+    ht->c=0;
+    return 0;
+} 
+
+node_t * hash_table_lookup(hTable_t *ht , int d )
+{
+    int hv = hash_value(d);
+    node_t * sn= NULL ;
+    
+    sn=ht->node[hv];
+    
+    while (NULL != sn)
+    {
+        if(sn->d == d)
+          return sn ;  
+        
+        sn=sn->n;
+    }
+    
+    return NULL ;
+    
+}  
+
+int insert_in_hash_table(hTable_t *h , int d)
+{
+    int hv=0;
+    node_t *t= NULL ;
+    node_t *t2= NULL ;
+    
+    hv=hash_value(d) ;
+    
+    t=h->node[hv] ;
+    if(NULL == t )
+    {
+        t2=(node_t *)malloc(sizeof(node_t));
+        if(NULL ==  t2)
+        {
+            return  -1;
+        } 
+        memset(t2,0,sizeof(node_t));
+        t2->d=d;
+        h->node[hv]=t2 ;   
+         (h->c)++;
+    } 
+    else 
+    {
+        t2=(node_t *)malloc(sizeof(node_t));
+        if(NULL ==  t2)
+        {
+            return  -1;
+        } 
+        memset(t2,0,sizeof(node_t));
+        t2->d=d;
+        t2->n=h->node[hv];
+        h->node[hv]=t2;
+        (h->c)++;
+    } 
+    return 0;
+}
+
+
+void delete_hash_table(hTable_t *h)
+{
+    int i =0;
+    node_t *t= NULL ;
+    node_t *t2= NULL ;
+    
+    for (i=0;i<HAX_TABLE_SiZE;i++)
+    {
+        t=h->node[i];
+        while(NULL != t)
+        {
+            t2=t->n ;
+            free(t);
+            t=t2;
+        }
+        h->node[i]=NULL;
+    }    
+    
+    free(h->node);
+} 
+
+
+
+bool containsDuplicate(int* nums, int numsSize)
+{
+    hTable_t h ={0,};
+    bool ret2=false;
+    int ret=-1;
+    node_t *t= NULL ;
+    int i=0;
+    
+    
+    ret=hash_table_init(&h);
+    
+    if(-1==ret)
+       return  ret2;
+    
+    hash_table_init(&h);
+    
+    for (i=0;i<numsSize;i++)
+    {
+        t=hash_table_lookup(&h,nums[i]);
+        if(NULL != t)
+        {
+            delete_hash_table(&h);
+            return true;
+        } 
+        else 
+        {
+            insert_in_hash_table(&h,nums[i]);
+        }    
+    } 
+    delete_hash_table(&h);
+    return false ;
+    
+}
+
+https://leetcode.com/problems/contains-duplicate-ii
+#define HAX_TABLE_SiZE  1000
+
+typedef struct node_s
+{
+    int d ;
+    int idx;
+    struct node_s *n ; 
+}node_t;
+
+typedef struct hTable_s
+{
+    struct node_s **node ;
+    int c ;
+}hTable_t;
+
+int hash_value(int d)
+{
+    int ret = d%HAX_TABLE_SiZE ;
+    
+    if(ret < 0)
+       ret= -1 * ret; 
+    return (ret);
+}
+
+int hash_table_init(hTable_t *ht)
+{
+    ht->node=(struct node_s **)malloc(sizeof(struct node_s *)*HAX_TABLE_SiZE);
+    if(NULL ==  ht->node)
+    {
+        return -1 ;
+    }    
+    memset(ht->node,0,sizeof(struct node_s *)*HAX_TABLE_SiZE);
+    ht->c=0;
+    return 0;
+} 
+
+void  hash_table_lookup(hTable_t *ht , int d , node_t ** out , int *len )
+{
+    int hv = hash_value(d);
+    node_t * sn= NULL ;
+    
+    sn=ht->node[hv];
+    
+    while (NULL != sn)
+    {
+        if(sn->d == d)
+        {
+            out[*len]=sn;
+            (*len)++;
+        }
+        
+        sn=sn->n;
+    }
+    
+    return ;
+    
+}  
+
+int insert_in_hash_table(hTable_t *h , int d, int idx)
+{
+    int hv=0;
+    node_t *t= NULL ;
+    node_t *t2= NULL ;
+    
+    hv=hash_value(d) ;
+    
+    t=h->node[hv] ;
+    if(NULL == t )
+    {
+        t2=(node_t *)malloc(sizeof(node_t));
+        if(NULL ==  t2)
+        {
+            return  -1;
+        } 
+        memset(t2,0,sizeof(node_t));
+        t2->d=d;
+        t2->idx=idx;
+        h->node[hv]=t2 ;   
+         (h->c)++;
+    } 
+    else 
+    {
+        t2=(node_t *)malloc(sizeof(node_t));
+        if(NULL ==  t2)
+        {
+            return  -1;
+        } 
+        memset(t2,0,sizeof(node_t));
+        t2->d=d;
+        t2->idx=idx; 
+        t2->n=h->node[hv];
+        h->node[hv]=t2;
+        (h->c)++;
+    } 
+    return 0;
+}
+
+
+void delete_hash_table(hTable_t *h)
+{
+    int i =0;
+    node_t *t= NULL ;
+    node_t *t2= NULL ;
+    
+    for (i=0;i<HAX_TABLE_SiZE;i++)
+    {
+        t=h->node[i];
+        while(NULL != t)
+        {
+            t2=t->n ;
+            free(t);
+            t=t2;
+        }
+        h->node[i]=NULL;
+    }    
+    
+    free(h->node);
+} 
+
+
+
+
+bool containsNearbyDuplicate(int* nums, int numsSize, int k)
+{
+     int i =0; 
+     hTable_t h ={0,};
+     node_t *t= NULL ;
+     node_t *elm[100000]={0,};
+     int len =0; 
+     int j=0; 
+    
+     hash_table_init(&h); 
+    
+     for(i=0;i<numsSize;i++)
+     {
+         hash_table_lookup(&h,nums[i],elm,&len);
+         if(0 == len )
+         {
+             insert_in_hash_table(&h,nums[i],i);
+         }    
+         else 
+         {
+             for(j=0;j<len;j++)
+             {     
+                if(abs(i-(elm[j]->idx)) <= k)
+                   return true ;
+             }    
+             insert_in_hash_table(&h,nums[i],i);
+         }    
+     }    
+     delete_hash_table(&h);
+     return false ;
+
+}
+
+https://leetcode.com/problems/merge-intervals
+#sort the list and we can get the solutions 
+class Solution(object):
+    def merge(self, intervals):
+        """
+        :type intervals: List[List[int]]
+        :rtype: List[List[int]]
+        """
+        l=[]
+        s=0
+        e=0
+        res=[]
+        intervals.sort()
+        s=intervals[0][0]
+        e=intervals[0][1]
+        reload1=0;
+        for i in intervals[1:] :
+            if 1 == reload1:
+               s=i[0]
+               e=i[1]
+               reload1=0;
+               continue  
+            if e < i[0]:
+                res.append([s,e])
+                s=i[0]
+                e=i[1]
+            elif e >= i[0] and e < i[1] :
+                e=i[1]
+            elif e > i[0] and e > i[1] :
+                 continue 
+                
+        res.append([s,e])         
+        return res 
+https://leetcode.com/problems/lru-cache/        
+class Lst:
+      def __init__(self):
+          self.f=None
+          self.l=None
+      
+      def insert_at_starting(self,node1):
+          temp2=self.f          
+          node1.p=None   
+          if None != temp2:
+             temp2.p=node1
+             self.f=node1
+             node1.n=temp2
+          else : 
+             self.f=self.l=node1
+             node1.n=node1.p=None    
+          
+       
+      def remove_node(self,node1):
+           if None == node1 or ( None == self.f and None == self.l ) :
+               return 
+            
+           temp1=node1.p
+           temp2=node1.n
+           if None ==  temp1 and None == temp2 :
+              self.f=self.l=None 
+           elif None ==temp1:
+              self.f=temp2
+              temp2.p=None              
+           elif None == temp2 :
+              self.l=temp1
+              temp1.n=None                 
+           else :
+              temp1.n=temp2
+              temp2.p=temp1 
+           node1.n=node1.p=None 
+           return
+		   
+      def get_last_node(self):
+           return self.l 
+               
+                
+            
+
+class Node :
+    def __init__(self,data):
+        self.data=data
+        self.n=None
+        self.p=None
+
+
+
+
+class LRUCache(object):
+
+    def __init__(self, capacity):
+        """
+        :type capacity: int
+        """
+        self.map1={}
+        self.Lst=Lst() 
+        self.c=capacity
+        
+
+    def get(self, key):
+        """
+        :type key: int
+        :rtype: int
+        """
+        try :
+            ret=self.map1[key][0]
+        except :
+            return -1
+        
+        self.Lst.remove_node(self.map1[key][1])
+        self.Lst.insert_at_starting(self.map1[key][1])
+        return ret
+                
+        
+    def put(self, key, value):
+        """
+        :type key: int
+        :type value: int
+        :rtype: None
+        """
+
+        try :
+            self.map1[key]=(value,self.map1[key][1])
+            self.Lst.remove_node(self.map1[key][1])
+            self.Lst.insert_at_starting(self.map1[key][1])           
+        except:
+            if len(self.map1) >= self.c:
+               lastNode1=self.Lst.get_last_node()
+               self.Lst.remove_node(lastNode1)
+               del self.map1[lastNode1.data]
+               del lastNode1 
+            newNode=Node(key)
+            self.Lst.insert_at_starting(newNode)
+            self.map1[key]=(value,newNode)
+        #print("map is %s\n" % str(self.map1))    
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+
+https://leetcode.com/problems/design-browser-history
+class BrowserHistory(object):
+
+    def __init__(self, homepage):
+        """
+        :type homepage: str
+        """
+        self.curr=0
+        self.lst=[]
+        self.lst.append(homepage)
+        
+
+    def visit(self, url):
+        """
+        :type url: str
+        :rtype: None
+        """
+        del self.lst[self.curr+1:]
+        self.lst.append(url)
+        self.curr=self.curr+1
+        
+
+    def back(self, steps):
+        """
+        :type steps: int
+        :rtype: str
+        """
+        if (self.curr-steps) < 0 :
+            self.curr=0
+        else :
+            self.curr=self.curr-steps 
+            
+        return self.lst[self.curr]    
+        
+
+    def forward(self, steps):
+        """
+        :type steps: int
+        :rtype: str
+        """
+        retval =""
+        try :
+            idx=self.curr+steps 
+            retval=self.lst[idx]
+            self.curr=idx
+        except:
+            idx=len(self.lst)-1;
+            retval=self.lst[idx]
+            self.curr=idx
+        return retval     
+
+# Your BrowserHistory object will be instantiated and called as such:
+# obj = BrowserHistory(homepage)
+# obj.visit(url)
+# param_2 = obj.back(steps)
+# param_3 = obj.forward(steps) 
+
+https://leetcode.com/problems/sort-characters-by-frequency
+class Solution(object):
+    def frequencySort(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        m1={}
+        idx=0
+        for i in s :
+            try :
+                m1[i][0]=m1[i][0]+1
+            except:
+                m1[i]=[1,idx,i]
+            idx=idx+1
+        lst=[]
+        for i in m1.keys():
+            lst.append(m1[i])
+        lst.sort(reverse=True)
+        retstr=""
+        for i in lst:
+            tmpStr=i[2]*i[0]
+            retstr=retstr+tmpStr
+            
+        return retstr    
+		
+https://leetcode.com/problems/first-unique-character-in-a-string/
+
+typedef struct entry_s
+{
+    int c;
+    int idx; 
+}entry_t;
+
+void update_map(entry_t * map , char * s)
+{
+    int c1=0; 
+    while('\0' != *s)
+    {
+        (map[*s].c)++;
+        if(-1 == map[*s].idx)
+            map[*s].idx=c1;
+        c1++;
+        s++;
+    }    
+}    
+
+int firstUniqChar(char * s){
+
+    entry_t tm[126]={0,};
+    int i =0;
+    int tmpIdx=-1;
+    int tmpc=0;
+    
+    for (i=0;i<126;i++)
+    {
+        tm[i].idx=-1;
+    }    
+    
+    update_map(tm,s);
+    for(i=0;i<126;i++)
+    {
+        if (-1 == tmpIdx && tm[i].c == 1)
+        {
+            tmpIdx=tm[i].idx;
+            tmpc=tm[i].c ;
+        }
+        else if (tm[i].c == 1)
+        {
+            if(tm[i].idx < tmpIdx)
+            {
+                tmpIdx=tm[i].idx;
+            }    
+        }            
+    }    
+    return tmpIdx;                
+}
+https://leetcode.com/problems/search-in-rotated-sorted-array-i
+
+
+int search2(int *nums, int i , int j , int target )
+{
+    int m =0;
+    
+    m=(i+j)/2;
+    
+    while(i <= j)
+    {
+        if(target>nums[m])
+        {
+            i=m+1;
+            m=(i+j)/2;
+        }
+        else if (target < nums[m])
+        {
+            j=m-1;
+            m=(i+j)/2;
+        }    
+        else if(target == nums[m])
+        {
+            return m ;
+        }    
+    }    
+    return -1;
+} 
+
+
+bool search(int* nums, int numsSize, int target)
+{
+    
+    int * nums1 = NULL ;
+    int i =0;
+    int p = 0;
+    int q=0;
+    int temp=0;
+    
+    
+    nums1=malloc(sizeof(int) *numsSize*2);
+    if(NULL ==nums1)
+        return -1;
+    
+    memset(nums1, 0,sizeof(int) *numsSize*2);
+    
+    memcpy(nums1,nums,sizeof(int)*numsSize);
+    memcpy(nums1+numsSize,nums,sizeof(int)*numsSize);
+    
+    temp=nums[0];
+    for(i=1;i<numsSize;i++)
+    {
+        if(temp > nums[i])
+        {    
+            p=i;
+            break;
+        }
+        temp=nums[i];                
+    } 
+    
+    q=p+numsSize-1;
+    
+    temp=search2(nums1,p,q,target);
+    
+    free(nums1);
+    if (-1 != temp)
+        return true ;
+    else 
+        return false ;
+
+}
 https://leetcode.com/problems/3sum
 class Solution(object):
     def threeSum(self, nums):
