@@ -1,3 +1,60 @@
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    
+    
+    def get_path(self, root, p , path1):
+        if None ==  root or (len(path1) > 0 and p == path1[-1]):
+           return 
+        
+        path1.append(root)
+        self.get_path(root.left,p,path1)
+        self.get_path(root.right,p,path1)
+        if p != path1[-1] :
+           del path1[-1]
+        
+    def print_path(self,path):
+        print("print path ")
+        for i in path :
+            print(str(i.val)+" ")
+    
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        pathp=[]
+        pathq=[]
+        idx=-1
+        self.get_path(root,p,pathp)
+        self.get_path(root,q,pathq)
+        self.print_path(pathp)
+        self.print_path(pathq)
+        if len(pathp) >len(pathq):
+           length=len(pathq)
+        else: 
+           length=len(pathp)
+        
+        for i in range(length):
+            if pathp[i] == pathq[i]:
+               continue 
+            else:
+               idx=i-1
+               break 
+                 
+        if len(pathp) >len(pathq):           
+           return pathq[idx] 
+        else: 
+           return pathp[idx] 
+        
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree
 /**
  * Definition for a binary tree node.
