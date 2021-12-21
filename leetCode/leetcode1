@@ -1,3 +1,68 @@
+https://leetcode.com/problems/insert-into-a-binary-search-tree
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def insertIntoBST(self, root, val):
+        """
+        :type root: TreeNode
+        :type val: int
+        :rtype: TreeNode
+        """
+        if None ==  root :
+           temp =  TreeNode(val)
+           return temp 
+        
+        if val > root.val :
+           root.right=self.insertIntoBST(root.right,val)
+        if val < root.val :
+           root.left=self.insertIntoBST(root.left,val)
+        
+        return root 
+
+https://leetcode.com/problems/search-in-a-binary-search-tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+void searchBST2(struct TreeNode* root, int val,struct TreeNode** out )
+{
+    if (NULL != *out || NULL == root)
+        return  ;
+    
+    if (val == root->val )
+    {
+        *out=root;
+        return  ;
+    } 
+    else if (val > (root->val) )
+    {
+        searchBST2(root->right,val,out);
+    }    
+    else 
+    {
+        searchBST2(root->left,val,out);
+    }    
+}
+    
+struct TreeNode* searchBST(struct TreeNode* root, int val)
+{
+   struct TreeNode* temp = NULL ;
+    
+   searchBST2(root,val,&temp);
+    
+   return temp ;
+}
+
 https://leetcode.com/problems/delete-leaves-with-a-given-value
 # Definition for a binary tree node.
 # class TreeNode(object):
