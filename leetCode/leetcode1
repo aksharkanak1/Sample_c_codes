@@ -1,3 +1,40 @@
+https://leetcode.com/problems/symmetric-tree
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def isSymmetric2(self, root1, root2,status):
+        if status[0] == 0:
+           return 
+    
+        if None == root1 and None == root2 :
+           return 
+    
+        if (None != root1 and None == root2) or (None == root1 and None != root2) or (root1.val != root2.val) :
+           status[0]=0
+           return 
+       
+        self.isSymmetric2(root1.left,root2.right,status)
+        self.isSymmetric2(root1.right, root2.left,status)
+        
+        return
+    
+    def isSymmetric(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        status=[]
+        status.append(1)
+        self.isSymmetric2(root.left, root.right, status)
+        if status[0] == 1 :
+           return  True 
+        else :
+           return False     
+	   	   
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree
 # Definition for a binary tree node.
 # class TreeNode(object):
