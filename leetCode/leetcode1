@@ -1,3 +1,32 @@
+https://leetcode.com/problems/second-minimum-node-in-a-binary-tree
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def findSecondMinimumValue2(self, root, minV , data):
+        if(None == root):
+            return 
+        
+        if minV != root.val :
+           if -1 == data[0]:
+               data[0]=root.val 
+           elif root.val < data[0]:
+              data[0]=root.val  
+           
+        self.findSecondMinimumValue2(root.left,minV,data)
+        self.findSecondMinimumValue2(root.right, minV,data)
+    
+    def findSecondMinimumValue(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        data=[-1]
+        self.findSecondMinimumValue2(root,root.val,data) 
+        return  data[0]
 https://leetcode.com/problems/kth-smallest-element-in-a-bst/
 # Definition for a binary tree node.
 # class TreeNode(object):
