@@ -1,3 +1,35 @@
+https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    
+    def kthSmallest2(self, root, k,data,cnt):
+        if  None == root or None != data[0] or (k) < cnt[0] :
+            return  
+        
+        
+        
+        self.kthSmallest2(root.left,k,data,cnt)
+        cnt[0]=cnt[0]+1
+        if k == cnt[0]:
+            data[0] = root.val
+        self.kthSmallest2(root.right,k,data,cnt)
+
+        
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        data=[None]
+        cnt=[0]
+        self.kthSmallest2(root,k,data,cnt)
+        return data[0]
 https://leetcode.com/problems/delete-node-in-a-bst
 /**
  * Definition for a binary tree node.
