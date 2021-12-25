@@ -1,3 +1,66 @@
+https://leetcode.com/problems/valid-palindrome/
+#include <string.h>
+char Tolow(char c)
+{
+    char t =0;
+    int dis =0;
+    if(c <='z' && c>= 'a')
+        return c;
+     
+     dis =c-'A';
+     return ('a'+dis);
+}    
+
+int isalpha1 (char c)
+{
+    if((c >='A' && c<= 'Z') || ((c>='a') && (c<='z'))||
+       ((c >= '0') &&(c<='9')))
+       {
+           return 1 ;
+       }   
+       return 0;
+}    
+
+
+bool isPalindrome(char * s)
+{
+    char * p = NULL ;
+    char * q = NULL ;
+    bool ret = true;
+    p = s ;
+    q=strlen(s)-1+s;
+    if(p ==q)
+       return  ret ; 
+    
+    while (p < q)
+    {
+        if (!isalpha1(*p))
+        {
+            p++;
+            continue ;
+        }    
+        if (!isalpha1(*q))
+        {
+            q--;
+            continue; 
+        }     
+        if(Tolow(*p) != Tolow(*q))
+        {
+            ret=false;
+            break;
+        }    
+        else 
+        {
+            p++;
+            q--;
+        }    
+        
+    }    
+    
+    return (ret);
+
+}
+
 https://leetcode.com/problems/range-sum-of-bst
 
 int rangeSumBST2(struct TreeNode* root, int low, int high, int *sum){
