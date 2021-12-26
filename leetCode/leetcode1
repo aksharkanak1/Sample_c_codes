@@ -1,3 +1,22 @@
+https://leetcode.com/problems/binary-tree-level-order-traversal/
+class Solution:
+    def levelOrder2(self, root,lst,level):
+        if None == root :
+           return 
+        try :
+            lst[level].append(root.val)
+        except :    
+            lst2=[]
+            lst2.append(root.val)
+            lst.append(lst2)
+        
+        self.levelOrder2(root.left,lst,level+1)
+        self.levelOrder2(root.right,lst,level+1)
+    
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        retLst=[]
+        self.levelOrder2(root,retLst,0)
+        return retLst
 https://leetcode.com/problems/sort-array-by-increasing-frequency
 class Solution(object):
     def cmp(self,x,y):
