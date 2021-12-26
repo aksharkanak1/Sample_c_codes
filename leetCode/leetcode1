@@ -1,3 +1,27 @@
+https://leetcode.com/problems/sort-characters-by-frequency
+class Solution:
+    def frequencySort(self, s: str) -> str:
+        map1={}
+        lst=[]
+        finalStr=""
+        
+        for i in s :
+            try :
+                map1[i]=(map1[i][0]+1,i)
+            except :
+                map1[i]=(1,i)
+        for j in map1.keys():
+            lst.append(map1[j])
+                
+        lst.sort(reverse=True)
+        
+        for i in lst:
+             tempstr=i[1]*i[0]
+             finalStr=finalStr+tempstr
+                
+        return finalStr       
+                
+        
 https://leetcode.com/problems/valid-palindrome/
 #include <string.h>
 char Tolow(char c)
