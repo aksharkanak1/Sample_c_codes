@@ -1,3 +1,29 @@
+https://leetcode.com/problems/reverse-linked-list
+void reverseList2(struct ListNode* head,struct ListNode** ahead , struct ListNode**rhead)
+{
+    
+    if(NULL != head && NULL == head->next)
+    {
+        *ahead=head;
+        *rhead=head;
+        return  ;
+    }    
+    
+    reverseList2(head->next,ahead,rhead);
+    (*rhead)->next=head;
+    *rhead=head;
+}    
+
+struct ListNode* reverseList(struct ListNode* head)
+{
+    struct ListNode*h= NULL ;
+    struct ListNode*t= NULL ;
+    if(NULL == head || NULL == head->next)
+        return head;
+    reverseList2(head,&h,&t);
+    t->next=NULL ;
+    return h ;
+}
 https://leetcode.com/problems/binary-tree-level-order-traversal/
 class Solution:
     def levelOrder2(self, root,lst,level):
