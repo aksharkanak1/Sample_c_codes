@@ -1,3 +1,47 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+
+#include "limits.h"
+
+void  update_max_array(int *prices , int *max , int pricesSize)
+{
+    int i =0;
+    int max1 =INT_MIN ;
+    
+    for (i=pricesSize-1; i>=0 ;i--)
+    {
+        if(prices[i] > max1)
+        { 
+            max1=prices[i];
+            max[i]=max1;
+        }    
+        else 
+        {
+            max[i]=max1;
+        }    
+    }    
+}
+
+int maxProfit(int* prices, int pricesSize)
+{
+    int *max= NULL ;
+    int max2=INT_MIN;
+    int i=0;
+    max=malloc(sizeof(int) *pricesSize );
+    if(NULL == max)
+    {
+        return 0;
+    }    
+    memset(max,0,sizeof(int) *pricesSize);
+    
+    update_max_array(prices,max,pricesSize);
+    
+    for(i=0;i<pricesSize;i++)
+    {
+        if((max[i] -prices[i]) > max2)
+           max2= max[i] -prices[i];    
+    }    
+    return max2;
+}
 https://leetcode.com/problems/reverse-linked-list
 void reverseList2(struct ListNode* head,struct ListNode** ahead , struct ListNode**rhead)
 {
