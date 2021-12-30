@@ -1,3 +1,98 @@
+https://leetcode.com/problems/reorder-list/
+int divide_list(struct ListNode* head , struct ListNode**l1 , struct ListNode** l2 )   {
+    struct ListNode* p = NULL ;
+    struct ListNode* q= NULL ;
+    
+    p=q=head ; 
+    q=q->next ;
+    if(NULL !=q)
+    {
+        q=q->next ;
+    }    
+    while(NULL!=q)
+    {
+        p=p->next ;
+        q=q->next ;
+        if(NULL != q)
+           q=q->next ; 
+    }    
+    *l1=head ;
+    *l2=p->next ;
+    p->next=NULL ;
+    return 0;
+}                                                                                       
+void reverselist(struct ListNode* head , struct ListNode** h , struct ListNode** t)
+{
+    if(NULL == head->next)
+    {    
+       *h=head ;
+        *t=head ;
+        return ;
+    }   
+    reverselist(head->next,h,t);
+    (*t)->next=head;
+    (*t) = head ;
+    (*t)->next=NULL ;
+    return ;
+}    
+
+struct ListNode* mergelist(struct ListNode* p , struct ListNode* q)
+{
+    struct ListNode* temp = NULL  ;
+    struct ListNode* temp2 = NULL  ;
+    if(NULL == q && NULL == p)
+        return NULL ;
+        
+    if(NULL == p )
+        return  q ;
+    if(NULL == q)
+        return p ;
+    
+    temp=(struct ListNode*)malloc(sizeof(struct ListNode));
+    memset(temp,0,sizeof(struct ListNode));
+    temp2=temp;
+    while(NULL != p && NULL != q)
+    {
+        temp2->next=p;
+        p=p->next;
+        temp2=temp2->next ;
+        temp2->next= NULL ;
+        temp2->next=q;
+        q=q->next ;
+        temp2=temp2->next ;
+        temp2->next=NULL ;
+    }    
+    
+    if(NULL != p)
+    {
+        temp2->next=p;
+    }    
+    if(NULL != q)
+    {
+        temp2->next=q;
+    }    
+    
+     temp2=temp->next ;
+     free(temp);
+    return  temp2;
+}
+    
+void reorderList(struct ListNode* head)
+{
+     struct ListNode* l1= NULL ;
+     struct ListNode* l2= NULL ;
+     struct ListNode* h= NULL ;
+     struct ListNode* t= NULL ;
+    
+     if(NULL == head || NULL == head->next)
+        return  head; 
+    
+     divide_list(head,&l1,&l2);
+     reverselist(l2,&h,&t);
+     l2=h;
+     h=mergelist(l1,l2);
+     return  ;    
+}
 https://leetcode.com/problems/maximum-number-of-balloons/
 class Solution(object):
     def maxNumberOfBalloons(self, text):
