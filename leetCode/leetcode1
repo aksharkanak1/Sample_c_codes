@@ -1,3 +1,57 @@
+https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
+int size_of_list(struct ListNode* p)
+{
+    int c=0; 
+    if(NULL ==  p )
+       return 0 ;
+    
+    while(NULL != p)
+    {
+        c++;
+        p=p->next ;
+    }    
+    return c;
+}    
+
+struct ListNode* get_parNode(struct ListNode* p , int idx)
+{
+    int c=0;
+    struct ListNode* t= NULL ;
+    if(NULL == p)
+        return NULL ;
+    t=p;
+    while(c<idx)
+    {
+        c++;
+        t=t->next ;
+    }    
+    return t ;
+}   
+
+struct ListNode* deleteMiddle(struct ListNode* head){
+
+    struct ListNode* p = NULL ;
+    struct ListNode* q = NULL ;
+    int size=0;
+    int idx=0;
+    if(NULL == head )
+        return NULL ;
+        
+     if(NULL == head->next)
+     {
+         free (head) ;
+         return NULL ;
+     }  
+     size=size_of_list(head);
+     idx=size/2;
+     idx=idx-1;
+     p=get_parNode(head,idx);
+     q=p->next;
+     p->next=q->next ;
+     free(q);
+     return  head ;
+     
+}
 https://leetcode.com/problems/reorder-list/
 int divide_list(struct ListNode* head , struct ListNode**l1 , struct ListNode** l2 )   {
     struct ListNode* p = NULL ;
