@@ -1,3 +1,142 @@
+
+https://leetcode.com/problems/recover-binary-search-tree/
+#define FILLED_1 0x01
+#define FILLED_2 0x02 
+
+typedef struct ptr_s
+{
+    char filled ;
+    struct TreeNode* p1 ;
+    struct TreeNode* q1 ;
+    struct TreeNode* p2;
+    struct TreeNode* q2;
+}ptr_t ;
+
+void recoverTree2(struct TreeNode* root, struct TreeNode**prev, ptr_t *ptrs){
+
+    
+    if(NULL == root)
+        return ;
+    
+    recoverTree2(root->left, prev,ptrs);
+    if(NULL != *prev)
+    {
+        if((*prev)->val > root->val)
+        {
+            if(((ptrs->filled)&FILLED_1) == FILLED_1)
+            {
+                ptrs->p2=*prev;
+                ptrs->q2=root;
+                ptrs->filled |=FILLED_2;
+            }    
+            else 
+            {
+                ptrs->p1=*prev;
+                ptrs->q1=root;     
+                ptrs->filled |=FILLED_1;
+            }    
+        }    
+    }    
+    *prev=root;   
+    
+    recoverTree2(root->right, prev,ptrs);
+}
+
+
+void recoverTree(struct TreeNode* root)
+{
+    ptr_t ptrs={0,};
+    struct TreeNode*prev= NULL ;
+    int temp = 0;
+    
+    recoverTree2(root,&prev,&ptrs);
+    
+    if((NULL !=ptrs.p1 && NULL != ptrs.q1) && (NULL == ptrs.p2 && NULL == ptrs.q2))
+    {
+        temp=ptrs.p1->val ;
+        ptrs.p1->val=ptrs.q1->val ;
+        ptrs.q1->val=temp ;
+    }    
+    else 
+    {
+        temp=ptrs.p1->val ;
+        ptrs.p1->val=ptrs.q2->val ;
+        ptrs.q2->val=temp ;
+    }    
+}
+https://leetcode.com/problems/univalued-binary-tree/
+void isUnivalTree2(struct TreeNode* root , int * isUni , int Uniqueval)
+{
+    if(NULL == root || (0 == *isUni))
+        return ;
+    
+    if (Uniqueval != root->val)
+    {
+        *isUni=0;
+        return;
+    }    
+    
+    isUnivalTree2(root->left,isUni,Uniqueval);
+    isUnivalTree2(root->right,isUni,Uniqueval);
+}    
+
+bool isUnivalTree(struct TreeNode* root)
+{
+    int isUni=1;
+    
+    if(NULL == root || ((NULL== root->left) && (NULL == root-> right)))
+    {
+        return true ;
+    }    
+    isUnivalTree2(root,&isUni,root->val);
+    if(1 == isUni)
+        return true ;
+    
+    return  false ;
+
+}
+
+https://leetcode.com/problems/binary-tree-tilt/
+#include <stdlib.h>
+#define MAX_NUM_TLT 10000
+int findTilt2(struct TreeNode* root,int *tlt, int *cnt)
+{
+    int lS=0;
+    int rS=0;
+    int ret=0;
+    if(NULL == root)
+        return 0;
+    
+    lS=findTilt2(root->left, tlt,cnt);
+    rS=findTilt2(root->right,tlt,cnt);
+    
+    ret=abs(lS-rS);
+    tlt[*cnt]=ret;
+    (*cnt)++;
+    ret=lS+rS+root->val; 
+    return  ret;
+}    
+
+int findTilt(struct TreeNode* root)
+{
+    int tlt[MAX_NUM_TLT]={0,};
+    int cnt =0;
+    int sum = 0;
+    int i=0;
+    
+    if(NULL == root)
+        return 0;
+    
+    findTilt2(root,tlt,&cnt);
+    
+    for(i=0;i<cnt;i++)
+    {
+        sum=sum+tlt[i];
+    }    
+    
+    return  sum ;
+    
+}
 https://leetcode.com/problems/two-sum-iv-input-is-a-bst/
 class Solution(object):
     def findTarget2(self, root,map1, key,iffound):
