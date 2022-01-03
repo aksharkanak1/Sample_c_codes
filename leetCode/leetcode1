@@ -1,4 +1,169 @@
+https://leetcode.com/problems/path-sum-ii/
+import copy 
+class Solution(object):
+    
+    def pathSum2(self, root, targetSum,sum1,finalLst, lst ):
+        if None == root :
+           return 
+    
+        lst.append(root.val)
+        sum1[0]=sum1[0]+root.val
+        if None == root.right and None == root.left :
+           if sum1[0] == targetSum :
+              temp=copy.deepcopy(lst)
+              finalLst.append(temp)
+                
+        self.pathSum2(root.left,targetSum,sum1,finalLst, lst)
+        self.pathSum2(root.right,targetSum,sum1,finalLst, lst)
+        
+        sum1[0]=sum1[0]-root.val 
+        if len(lst) > 0 :
+           del lst[-1] 
+        
+    def pathSum(self, root, targetSum):
+        """
+        :type root: TreeNode
+        :type targetSum: int
+        :rtype: List[List[int]]
+        """
+        finalLst=[]
+        lst=[]
+        sum1=[0]
+        self.pathSum2(root,targetSum,sum1,finalLst,lst)
+        return finalLst
+https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
+#define MAX_DEPTH  1000
+struct Node* connect2(struct Node*root, struct Node *lst[], int level)
+{
+    if(NULL == root)
+        return ;
+    
+    if(NULL != lst[level])
+    {
+         lst[level]->next=root;
+    }    
+    lst[level]=root;    
+    
+    connect2(root->left, lst, level+1);
+    connect2(root->right, lst,level+1);
+}    
 
+struct Node* connect(struct Node* root)
+{
+    struct Node * lst[MAX_DEPTH]={0,};
+    
+    if(NULL == root )
+        return root ;
+    
+    connect2(root,lst,0);
+    
+    return root;
+	
+}
+https://leetcode.com/problems/binary-tree-right-side-view/
+#define MAX_DEPTH 100
+void  rightSideView2(struct TreeNode* root, int *ret ,int* returnSize, int level)
+{
+    if(NULL == root)
+    {
+        return  ;
+    }    
+    
+    ret[level]=root->val ;
+    if(*returnSize < level)
+    {
+        *returnSize=level;
+    }    
+    
+    rightSideView2(root->left,ret,returnSize, level+1);
+    rightSideView2(root->right,ret,returnSize, level+1)  ;  
+
+}
+
+int* rightSideView(struct TreeNode* root, int* returnSize){
+
+    int * ret = NULL ;
+    int retSize=0;
+    
+
+    
+    ret=malloc(sizeof(int)*MAX_DEPTH);
+    if(NULL == ret )
+       return  NULL ;
+    
+    memset(ret,0,sizeof(int)*MAX_DEPTH);
+    if(NULL == root)
+    {
+        *returnSize=0;
+        return ret ;
+    }    
+    rightSideView2(root,ret,&retSize,0);
+    
+    retSize=retSize+1;
+    
+    *returnSize=retSize;
+    
+    return ret ;
+}
+https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+#define MAX_DEPTH  1000
+struct Node* connect2(struct Node*root, struct Node *lst[], int level)
+{
+    if(NULL == root)
+        return ;
+    
+    if(NULL != lst[level])
+    {
+         lst[level]->next=root;
+    }    
+    lst[level]=root;    
+    
+    connect2(root->left, lst, level+1);
+    connect2(root->right, lst,level+1);
+}    
+
+struct Node* connect(struct Node* root)
+{
+    struct Node * lst[MAX_DEPTH]={0,};
+    
+    if(NULL == root )
+        return root ;
+    
+    connect2(root,lst,0);
+    
+    return root;
+	
+}
+https://leetcode.com/problems/count-good-nodes-in-binary-tree/
+#include "limits.h"
+
+int goodNodes2(struct TreeNode* root , int max , int *c)
+{
+    if(NULL == root)
+        return ;
+
+    if((root->val) >= max)
+    {
+        (*c)=(*c)+1;
+        //printf("\nincreating c %d\n", *c);
+        max=root->val ;
+    } 
+       
+    goodNodes2(root->left,max,c);
+    goodNodes2(root->right,max, c);
+}   
+
+
+int goodNodes(struct TreeNode* root)
+{
+    int max=INT_MIN;
+    int c=0;
+    
+    goodNodes2(root,max,&c);
+    
+    return  c; 
+
+}
 https://leetcode.com/problems/recover-binary-search-tree/
 #define FILLED_1 0x01
 #define FILLED_2 0x02 
