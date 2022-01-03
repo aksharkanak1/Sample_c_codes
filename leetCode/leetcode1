@@ -1,3 +1,34 @@
+https://leetcode.com/problems/two-sum-iv-input-is-a-bst/
+class Solution(object):
+    def findTarget2(self, root,map1, key,iffound):
+        if None == root or True == iffound[0]:
+           return  
+    
+        diff = key-root.val ;
+        
+        try :
+            map1[diff]
+            iffound[0]=True
+            return 
+        except :
+            map1[root.val]=1
+            
+        self.findTarget2(root.left,map1,key,iffound)
+        self.findTarget2(root.right,map1,key,iffound)
+        return 
+            
+    
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        map1={}
+        iffound=[False]
+        self.findTarget2(root,map1,k,iffound)
+        return iffound[0]
+
 https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/
 int size_of_list(struct ListNode* p)
 {
